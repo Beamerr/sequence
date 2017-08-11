@@ -1,6 +1,7 @@
 
 require "gosu"
 require "rspec/autorun"
+require "byebug"
 
 class SequenceGame < Gosu::Window
   
@@ -38,13 +39,24 @@ class Card
 
   def initialize(suit, value)
     @suit = suit
-    @value = value
+    @value = value 
+  end
+
+  def to_s
     
+    puts "#{@value}-#{suit}"
+
   end
 
 end
 
 class Deck
+  attr_reader :cards
+
+  def initialize
+    @cards = Deck.build_cards
+  end
+
   def self.build_cards
     cards = []
       [:clubs, :diamonds, :hearts, :spades].each do |suit|
@@ -57,7 +69,7 @@ class Deck
         end
       end
     end
-    cards
+    cards.shuffle
   end
 end
 
@@ -77,15 +89,19 @@ describe Card do
 
   it "should accept suit and value when building" do
     card = Card.new(:clubs, 10)
-    card.value.should eq(10)
-    card.suit.should eq(:clubs)
+    expect(card.value).to eq(10)
+    expect(card.suit).to eq(:clubs)
   end
 
   it "should have a value of 4 for the 4-clubs" do
     card = Card.new(:clubs, 4)
-    card.value.should eq(4)
+    expect(card.value).to eq(4)
   end
   
+  it "should be formatted" do
+    card = Card.new(:hearts, "king")
+    expect(card.to_s).to eq("king-hearts")
+  end
 end
 
 describe Deck do
@@ -94,8 +110,10 @@ describe Deck do
     expect(Deck.build_cards.length).to eq(104)
   end
 
-  it "should have 1 to 10 and J, Q, K of each suit x 2"
+  it "should have 104 cards when new" do
+    expect(Deck.new.cards.length).to eq(104)
+  end
 
-  it "should have 4 suits" 
+
 
 end
