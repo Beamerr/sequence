@@ -44,8 +44,8 @@ class Card
 
   def to_s
     
-    puts "#{@value}-#{suit}"
-
+   "#{@value}-#{suit}"
+    
   end
 
 end
@@ -59,13 +59,14 @@ class Deck
 
   def self.build_cards
     cards = []
-      [:clubs, :diamonds, :hearts, :spades].each do |suit|
       2.times do
+       [:clubs, :diamonds, :hearts, :spades].each do |suit|
+      
           (1..10).each do |number|
-          cards << Card.new(suit, number)
+          cards << Card.new(suit, number).to_s
         end
-        [:jack, :queen, :king].each do |facecard|
-          cards << Card.new(suit, facecard)
+        ["j", "q", "k"].each do |facecard|
+          cards << Card.new(suit, facecard).to_s
         end
       end
     end
@@ -99,8 +100,8 @@ describe Card do
   end
   
   it "should be formatted" do
-    card = Card.new(:hearts, "king")
-    expect(card.to_s).to eq("king-hearts")
+    card = Card.new(:hearts, "k")
+    expect(card.to_s).to eq("k-hearts")
   end
 end
 
