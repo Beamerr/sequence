@@ -1,2 +1,0 @@
-# sequence
-The game sequence
