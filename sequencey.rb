@@ -2,6 +2,9 @@
 require "gosu"
 require "rspec/autorun"
 require "byebug"
+require "rubygems"
+require "mini_magick"
+require "gosu/all"
 
 class SequenceGame < Gosu::Window
   
@@ -9,12 +12,10 @@ class SequenceGame < Gosu::Window
 
   def initialize width=1280, height=800, fullscreen=true
     super
-    self.caption = "Sequence!"
+    
 
-    @image = Gosu::Image.from_text self,
-                    "Sequence!",
-                    Gosu.default_font_name,
-                    200
+    @board = Gosu::Grid.new(self)
+    @board.default_cell = Board.new(self, 0, 0)
   end
 
   def button_down id
@@ -26,12 +27,23 @@ class SequenceGame < Gosu::Window
   end
 
   def draw
-    @image.draw self.width/2 - @image.width/2, 
-                self.height/2 - @image.height/2,
-                0
+    @board.draw 
+  end
+end
+
+class Board < Gosu::Grid::Cell
+  def size
+    tile.width
+
   end
 
-end 
+  def tile
+    @tile ||= Gosu::Image.new(window, 'PNG-cards-1.3/10_of_clubs.png', true)
+  end
+end
+
+
+
 
 class Card
   
@@ -74,6 +86,20 @@ class Deck
   end
 end
 
+class Game
+  def initialize
+    @deck = Deck.new
+    @player_hand1 = Hand.new
+    @player_hand2 = Hand.new
+    @player_hand3 = Hand.new
+    @player_hand4 = Hand.new
+
+  end
+end
+
+
+
+
 describe SequenceGame do
 
   it "should open a window" do
@@ -114,7 +140,7 @@ describe Deck do
   it "should have 104 cards when new" do
     expect(Deck.new.cards.length).to eq(104)
   end
-
-
-
 end
+
+
+
