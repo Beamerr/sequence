@@ -4,22 +4,14 @@ require "rspec/autorun"
 require "byebug"
 require "rubygems"
 require "mini_magick"
-require "gosu/all"
 
-class SequenceGame < Gosu::Window
+class Board
+
+  def initialize window
+    @window = window
+    @images = Gosu::Image.new(window, 'PNG-cards-1.3/10_of_clubs.png', true)
+   
   
-  attr_reader :image
-
-  def initialize width=1280, height=800, fullscreen=true
-    super
-    
-
-    @board = Gosu::Grid.new(self)
-    @board.default_cell = Board.new(self, 0, 0)
-  end
-
-  def button_down id
-    close if id == Gosu::KbEscape
   end
 
   def update
@@ -27,20 +19,38 @@ class SequenceGame < Gosu::Window
   end
 
   def draw
-    @board.draw 
+    @images.each do |x|
+      x.draw 0, 0, 0
+    end
   end
 end
 
-class Board < Gosu::Grid::Cell
-  def size
-    tile.width
 
+class SequenceGame < Gosu::Window
+  
+  def initialize width=1280, height=800, fullscreen=true
+    super
+    
+    @board = Board.new self
+      
+    
   end
 
-  def tile
-    @tile ||= Gosu::Image.new(window, 'PNG-cards-1.3/10_of_clubs.png', true)
+  def button_down id
+    close if id == Gosu::KbEscape
   end
+
+  def update
+   @board.update
+  end
+
+  def draw
+   @board.draw
+  end
+
 end
+
+
 
 
 
