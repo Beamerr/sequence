@@ -4,25 +4,26 @@ require "rspec/autorun"
 require "byebug"
 require "rubygems"
 require "mini_magick"
+require "gosu/all"
 
-class Board
-
-  def initialize window
-    @window = window
-    @images = Gosu::Image.new(window, 'PNG-cards-1.3/10_of_clubs.png', true)
-   
-  
-  end
-
-  def update
+class Cell < Gosu::Grid::Cell
+  def size
+    object.width
     
+
+   
+=begin
+     @images = Array.new
+     Dir.glob("PNG-cards-1.3/*.png") do |x|
+      @images.push Gosu::Image.new(x)  
+     end
+=end 
   end
 
-  def draw
-    @images.each do |x|
-      x.draw 0, 0, 0
-    end
+  def object
+    @object ||= Gosu::Image.new(window, 'PNG-cards-1.3/10_of_clubs.png', true)
   end
+    
 end
 
 
@@ -31,9 +32,9 @@ class SequenceGame < Gosu::Window
   def initialize width=1280, height=800, fullscreen=true
     super
     
-    @board = Board.new self
-      
-    
+    @grid = Gosu::Grid.new(self)
+    @grid.default_cell = Cell.new(self, 0, 0)
+ 
   end
 
   def button_down id
@@ -41,11 +42,11 @@ class SequenceGame < Gosu::Window
   end
 
   def update
-   @board.update
+    
   end
 
   def draw
-   @board.draw
+    @grid.draw && sleep(0.05)
   end
 
 end
