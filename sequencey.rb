@@ -8,7 +8,7 @@ require "gosu/all"
 
 class Cell < Gosu::Grid::Cell
   def size
-    object.width
+    object = MiniMagick::Image.new()
     
 
    
@@ -21,7 +21,7 @@ class Cell < Gosu::Grid::Cell
   end
 
   def object
-    @object ||= Gosu::Image.new(window, 'PNG-cards-1.3/10_of_clubs.png', true)
+    @object ||= Gosu::Image.new('PNG-cards-1.3/10_of_clubs.png', true)
   end
     
 end
@@ -46,7 +46,7 @@ class SequenceGame < Gosu::Window
   end
 
   def draw
-    @grid.draw && sleep(0.05)
+    @grid.draw 
   end
 
 end
