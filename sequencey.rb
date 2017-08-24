@@ -7,23 +7,38 @@ require "mini_magick"
 require "gosu/all"
 
 class Cell < Gosu::Grid::Cell
-  def size
-    object = MiniMagick::Image.new()
-    
 
+
+
+  def size
+    object.each do |image|
+      image.width
+    end
+  end
    
 =begin
-     @images = Array.new
+
+     @object = Array.new
      Dir.glob("PNG-cards-1.3/*.png") do |x|
-      @images.push Gosu::Image.new(x)  
+      @object.push Gosu::Image.new(x)  
      end
+
+    @object.each do |x|
+      @object.push Gosu::Image.new(window, x, true)
+    end
 =end 
-  end
+private
 
   def object
-    @object ||= Gosu::Image.new('PNG-cards-1.3/10_of_clubs.png', true)
+
+      
+    pack = Dir.glob("PNG-cards-1./*.png")
+      pack.each do |file|
+        
+         @object ||= Gosu::Image.new(window, file, false)
+    end
+  
   end
-    
 end
 
 
@@ -46,7 +61,7 @@ class SequenceGame < Gosu::Window
   end
 
   def draw
-    @grid.draw 
+    @grid.draw
   end
 
 end
