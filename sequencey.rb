@@ -32,10 +32,10 @@ private
   def object
 
       
-    pack = Dir.glob("PNG-cards-1./*.png")
-      pack.each do |file|
-        
-         @object ||= Gosu::Image.new(window, file, false)
+    Dir.new("PNG-cards-1.3").each do |file|
+      next if File.directory? file
+       File.expand_path(file)
+       @object ||= Gosu::Image.new(window, file, false)
     end
   
   end
@@ -49,6 +49,7 @@ class SequenceGame < Gosu::Window
     
     @grid = Gosu::Grid.new(self)
     @grid.default_cell = Cell.new(self, 0, 0)
+    
  
   end
 
