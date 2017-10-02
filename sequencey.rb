@@ -6,51 +6,24 @@ require "rubygems"
 require "mini_magick"
 require "gosu/all"
 
-class Cell < Gosu::Grid::Cell
-
-
-
-  def size
-    object.each do |image|
-      image.width
-    end
-  end
-   
-=begin
-
-     @object = Array.new
-     Dir.glob("PNG-cards-1.3/*.png") do |x|
-      @object.push Gosu::Image.new(x)  
-     end
-
-    @object.each do |x|
-      @object.push Gosu::Image.new(window, x, true)
-    end
-=end 
-private
-
-  def object
-
-      
-    Dir.new("PNG-cards-1.3").each do |file|
-      next if File.directory? file
-       File.expand_path(file)
-       @object ||= Gosu::Image.new(window, file, false)
-    end
-  
-  end
-end
 
 
 class SequenceGame < Gosu::Window
   
+  attr_reader :x, :y
+
   def initialize width=1280, height=800, fullscreen=true
     super
+   
+  
+    @board = []
+
+    Dir.glob("boarddeck/*.png").each do |file|
+      next if File.directory? file
+      @board << Gosu::Image.new(file)
+    end
+    @board
     
-    @grid = Gosu::Grid.new(self)
-    @grid.default_cell = Cell.new(self, 0, 0)
-    
- 
   end
 
   def button_down id
@@ -62,13 +35,18 @@ class SequenceGame < Gosu::Window
   end
 
   def draw
-    @grid.draw
+    @board.each_slice(10).to_a
+      @board.each do |tile|
+      tile.draw(0,0,0, scale_x = 0.3, scale_y = 0.3)
+    end
+    
+  end
+
+  def needs_cursor?
+    true
   end
 
 end
-
-
-
 
 
 
@@ -82,7 +60,7 @@ class Card
   end
 
   def to_s
-    
+     
    "#{@value}-#{suit}"
     
   end
@@ -124,9 +102,6 @@ class Game
   end
 end
 
-
-
-
 describe SequenceGame do
 
   it "should open a window" do
@@ -152,10 +127,6 @@ describe Card do
     expect(card.value).to eq(4)
   end
   
-  it "should be formatted" do
-    card = Card.new(:hearts, "k")
-    expect(card.to_s).to eq("k-hearts")
-  end
 end
 
 describe Deck do
@@ -167,7 +138,8 @@ describe Deck do
   it "should have 104 cards when new" do
     expect(Deck.new.cards.length).to eq(104)
   end
-end
 
+
+end
 
 
